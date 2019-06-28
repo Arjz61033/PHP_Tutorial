@@ -5,7 +5,6 @@ class Product{
     // database connection and table name
     private $conn;
     private $table_name = "products";
-    public $image;
  
     // object properties
     public $id;
@@ -13,6 +12,7 @@ class Product{
     public $price;
     public $description;
     public $category_id;
+    public $image;
     public $timestamp;
  
     public function __construct($db){
@@ -264,6 +264,28 @@ class Product{
             // if not, create it
             if(!is_dir($target_directory)){
                 mkdir($target_directory, 0777, true);
+            }
+
+            // if $file_upload_error_messages is still empty
+            if(empty($file_upload_error_messages)){
+                // it means there are no errors, so try to upload the file
+                if(move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)){
+                    // it means photo was uploaded
+                }else{
+                    $result_message.="<div class='alert alert-danger'>";
+                        $result_message.="<div>Unable to upload photo.</div>";
+                        $result_message.="<div>Update the record to upload photo.</div>";
+                    $result_message.="</div>";
+                }
+            }
+            
+            // if $file_upload_error_messages is NOT empty
+            else{
+                // it means there are some errors, so show them to user
+                $result_message.="<div class='alert alert-danger'>";
+                    $result_message.="{$file_upload_error_messages}";
+                    $result_message.="<div>Update the record to upload photo.</div>";
+                $result_message.="</div>";
             }
  
         }
